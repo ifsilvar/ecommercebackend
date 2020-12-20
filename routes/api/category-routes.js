@@ -3,13 +3,12 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all categories
   // be sure to include its associated Products
   try {
     const categoryData = await Category.findAll({
-      // This will retrieve every Reader's associated LibraryCard data. In SQL, this would be a JOIN function.
-      include: [{ model: Product }],
+            include: [{ model: Product }],
     });
     res.status(200).json(categoryData);
   } catch (err) {
@@ -17,7 +16,7 @@ router.get('/', (req, res) => {
   }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
   try {
