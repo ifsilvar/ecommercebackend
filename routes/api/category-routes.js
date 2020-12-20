@@ -6,9 +6,15 @@ const { Category, Product } = require('../../models');
 router.get('/', (req, res) => {
   // find all categories
   // be sure to include its associated Products
-  Category.findAll().then((CategoryData) => {
-    res.status(200).json(CategoryData);
-  });
+  try {
+    const categoryData = await Category.findAll({
+      // This will retrieve every Reader's associated LibraryCard data. In SQL, this would be a JOIN function.
+      include: [{ model: Product }],
+    });
+    res.status(200).json(categoryData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.get('/:id', (req, res) => {
@@ -16,7 +22,7 @@ router.get('/:id', (req, res) => {
   // be sure to include its associated Products
   try {
     const categoryData = await Category.findByPk(req.params.id, {
-      include: [{ model: Product, as: 'category_id' }] //???????????????????????????
+      include: [{ model: Product}],
     });
 
     if (!categoryData) {
@@ -24,7 +30,7 @@ router.get('/:id', (req, res) => {
       return;
     }
 
-    res.status(200).json(categoryData);
+    return res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
   }
